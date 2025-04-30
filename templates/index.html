@@ -10,23 +10,19 @@
   <div class="container">
     <h1> Markdown to PDF</h1>
 
-
     <div class="content-boxes">
-    
       <div class="upload-box">
         <div class="upload-zone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
           <p>📂 Drag your file here, choose a file, or write below:</p>
-
           <form method="POST" enctype="multipart/form-data">
             <input type="file" id="file-upload" accept=".md" />
             <p id="file-error" style="color: red; font-weight: bold; display: none;"></p>
 
-
             <textarea id="markdown-input" name="markdown" placeholder="Write or paste here..."></textarea>
 
             <div class="counter">
-               Words: <span id="word-count">0</span> |
-               Characters: <span id="char-count">0</span>
+              Words: <span id="word-count">0</span> |
+              Characters: <span id="char-count">0</span>
             </div>
 
             <div class="controls">
@@ -41,7 +37,6 @@
         </div>
       </div>
 
-     
       <div class="preview-box-container">
         <div class="preview-header">
           <h2> Output</h2>
@@ -57,9 +52,15 @@
     </div>
   </div>
 
-  
+  <!--  Load marked.js and configure GFM support -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
+    // ✅Enable GitHub-flavored Markdown and line breaks
+    marked.setOptions({
+      gfm: true,
+      breaks: true
+    });
+
     const textarea = document.getElementById("markdown-input");
     const previewView = document.getElementById("preview-view");
     const htmlView = document.getElementById("html-view");
@@ -78,35 +79,28 @@
     });
 
     function updatePreviewAndCount() {
-        const rawMarkdown = textarea.value;
-        const htmlOutput = marked.parse(rawMarkdown);
-  const selectedTheme = document.querySelector("select[name='theme']").value;
+      const rawMarkdown = textarea.value;
+      const htmlOutput = marked.parse(rawMarkdown);
+      const selectedTheme = document.querySelector("select[name='theme']").value;
 
-  // Update content
-  previewView.innerHTML = htmlOutput;
-  htmlView.textContent = htmlOutput;
+      previewView.innerHTML = htmlOutput;
+      htmlView.textContent = htmlOutput;
 
-  // Remove previous theme class
-  previewView.classList.remove("light", "dark", "resume");
-  htmlView.classList.remove("light", "dark", "resume");
+      previewView.classList.remove("light", "dark", "resume");
+      htmlView.classList.remove("light", "dark", "resume");
 
-  // Add selected theme
-  previewView.classList.add("preview-box", selectedTheme);
-  htmlView.classList.add("preview-box", selectedTheme);
+      previewView.classList.add("preview-box", selectedTheme);
+      htmlView.classList.add("preview-box", selectedTheme);
 
-  // Word & char count
-  const words = rawMarkdown.trim().split(/\s+/).filter(word => word.length > 0).length;
-  wordCount.textContent = words;
-  charCount.textContent = rawMarkdown.length;
+      const words = rawMarkdown.trim().split(/\s+/).filter(word => word.length > 0).length;
+      wordCount.textContent = words;
+      charCount.textContent = rawMarkdown.length;
 
-  localStorage.setItem("markdownDraft", rawMarkdown);
-}
-
+      localStorage.setItem("markdownDraft", rawMarkdown);
+    }
 
     textarea.addEventListener("input", updatePreviewAndCount);
     document.querySelector("select[name='theme']").addEventListener("change", updatePreviewAndCount);
-
-    
 
     previewTab.onclick = () => {
       previewTab.classList.add("active");
@@ -121,52 +115,51 @@
       previewView.style.display = "none";
       htmlView.style.display = "block";
     };
+
     fileUpload.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  const errorDisplay = document.getElementById("file-error");
+      const file = event.target.files[0];
+      const errorDisplay = document.getElementById("file-error");
 
-  if (file && !file.name.endsWith(".md")) {
-    errorDisplay.textContent = " Only .md (Markdown) files are supported.";
-    errorDisplay.style.display = "block";
-    fileUpload.value = ""; 
-    return;
-  }
+      if (file && !file.name.endsWith(".md")) {
+        errorDisplay.textContent = " Only .md (Markdown) files are supported.";
+        errorDisplay.style.display = "block";
+        fileUpload.value = "";
+        return;
+      }
 
-  errorDisplay.style.display = "none"; 
+      errorDisplay.style.display = "none";
 
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    textarea.value = e.target.result;
-    updatePreviewAndCount();
-  };
-  reader.readAsText(file);
-});
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        textarea.value = e.target.result;
+        updatePreviewAndCount();
+      };
+      reader.readAsText(file);
+    });
 
+    function handleDrop(event) {
+      event.preventDefault();
+      const errorDisplay = document.getElementById("file-error");
 
-function handleDrop(event) {
-  event.preventDefault();
-  const errorDisplay = document.getElementById("file-error");
+      if (event.dataTransfer.files.length > 0) {
+        const file = event.dataTransfer.files[0];
 
-  if (event.dataTransfer.files.length > 0) {
-    const file = event.dataTransfer.files[0];
+        if (!file.name.endsWith(".md")) {
+          errorDisplay.textContent = "Only .md (Markdown) files are supported.";
+          errorDisplay.style.display = "block";
+          return;
+        }
 
-    if (!file.name.endsWith(".md")) {
-      errorDisplay.textContent = "Only .md (Markdown) files are supported.";
-      errorDisplay.style.display = "block";
-      return;
+        errorDisplay.style.display = "none";
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          textarea.value = e.target.result;
+          updatePreviewAndCount();
+        };
+        reader.readAsText(file);
+      }
     }
-
-    errorDisplay.style.display = "none";
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      textarea.value = e.target.result;
-      updatePreviewAndCount();
-    };
-    reader.readAsText(file);
-  }
-}
-
 
     function handleDragOver(event) {
       event.preventDefault();
