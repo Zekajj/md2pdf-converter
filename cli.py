@@ -13,7 +13,7 @@ def convert(input_file, theme, output):
 
     allowed_themes = ["light", "dark", "resume"]
     if theme not in allowed_themes:
-        click.echo(f"❌ Invalid theme '{theme}'. Choose from: {', '.join(allowed_themes)}")
+        click.echo(f"Invalid theme '{theme}'. Choose from: {', '.join(allowed_themes)}")
         return
 
     with open(input_file, "r", encoding="utf-8") as f:
