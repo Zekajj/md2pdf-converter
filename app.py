@@ -18,7 +18,7 @@ def index():
         markdown_text = request.form.get("markdown", "")
         selected_theme = request.form.get("theme", "light")
 
-        # Render Markdown to HTML for preview
+        
         html_preview = markdown.markdown(markdown_text, extensions=['fenced_code', 'tables'])
 
         # Full HTML for PDF export with selected theme
