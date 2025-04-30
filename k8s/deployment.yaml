@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: md2pdf-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: md2pdf
+  template:
+    metadata:
+      labels:
+        app: md2pdf
+    spec:
+      containers:
+      - name: md2pdf
+        image: us-central1-docker.pkg.dev/md2pdfconverter/md2pdf/md2pdf-app
+        ports:
+        - containerPort: 5000

@@ -1,0 +1,29 @@
+name: GKE Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+    - name: Build and Push Docker image
+      run: |
+        gcloud builds submit --tag us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/md2pdf/md2pdf-app .
+
+    - name: Deploy to GKE
+      run: |
+        gcloud container clusters get-credentials md2pdf-cluster --zone us-central1-c
+        kubectl apply -f k8s/
