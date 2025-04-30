@@ -22,25 +22,5 @@ body.light {
   }
   
  
-  body.resume {
-    background-color: #ffffff;
-    color: #222;
-    font-family: 'Georgia', serif;
-    line-height: 1.7;
-    max-width: 800px;
-    margin: auto;
-  }
-  
-  body.resume h1, body.resume h2, body.resume h3 {
-    font-family: 'Georgia', serif;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 4px;
-  }
-  
-  body.resume blockquote {
-    border-left: 4px solid #ccc;
-    padding-left: 1rem;
-    color: #555;
-    font-style: italic;
-  }
+ 
   

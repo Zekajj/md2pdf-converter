@@ -141,12 +141,7 @@ select, .btn {
   color: #f8f8f8;
 }
 
-.resume {
-  background-color: #fef6e4;
-  color: #333;
-  font-family: Georgia, serif;
-  line-height: 1.6;
-}
+
 
 textarea:focus {
   outline: none;
@@ -154,7 +149,7 @@ textarea:focus {
   box-shadow: 0 0 5px rgba(159, 122, 234, 0.4);
 }
 
-/* Base table styling */
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -167,7 +162,7 @@ th, td {
   text-align: left;
 }
 
-/* Dark theme override for tables */
+
 .dark table {
   border: 1px solid #888;
   background-color: #1e1e1e;

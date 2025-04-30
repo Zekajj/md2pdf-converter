@@ -29,7 +29,7 @@
               <select name="theme">
                 <option value="light">Light Theme</option>
                 <option value="dark">Dark Theme</option>
-                <option value="resume">Resume Theme</option>
+                
               </select>
               <button type="submit" class="btn">📄 Convert to PDF</button>
             </div>
@@ -86,8 +86,8 @@
       previewView.innerHTML = htmlOutput;
       htmlView.textContent = htmlOutput;
 
-      previewView.classList.remove("light", "dark", "resume");
-      htmlView.classList.remove("light", "dark", "resume");
+      previewView.classList.remove("light", "dark");
+      htmlView.classList.remove("light", "dark");
 
       previewView.classList.add("preview-box", selectedTheme);
       htmlView.classList.add("preview-box", selectedTheme);
