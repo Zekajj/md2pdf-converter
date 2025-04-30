@@ -1,0 +1,46 @@
+
+body.light {
+    background-color: #ffffff;
+    color: #222;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+
+  body.dark {
+    background-color: #121212;
+    color: #f1f1f1;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  body.dark h1, body.dark h2, body.dark h3 {
+    color: #ffffff;
+  }
+  
+  body.dark code, body.dark pre {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+  }
+  
+ 
+  body.resume {
+    background-color: #ffffff;
+    color: #222;
+    font-family: 'Georgia', serif;
+    line-height: 1.7;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  body.resume h1, body.resume h2, body.resume h3 {
+    font-family: 'Georgia', serif;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 4px;
+  }
+  
+  body.resume blockquote {
+    border-left: 4px solid #ccc;
+    padding-left: 1rem;
+    color: #555;
+    font-style: italic;
+  }
+  

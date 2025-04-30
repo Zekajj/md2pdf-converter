@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Markdown to PDF Converter</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1> Markdown to PDF</h1>
+
+
+    <div class="content-boxes">
+    
+      <div class="upload-box">
+        <div class="upload-zone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
+          <p>📂 Drag your file here, choose a file, or write below:</p>
+
+          <form method="POST" enctype="multipart/form-data">
+            <input type="file" id="file-upload" accept=".md" />
+            <p id="file-error" style="color: red; font-weight: bold; display: none;"></p>
+
+
+            <textarea id="markdown-input" name="markdown" placeholder="Write or paste here..."></textarea>
+
+            <div class="counter">
+               Words: <span id="word-count">0</span> |
+               Characters: <span id="char-count">0</span>
+            </div>
+
+            <div class="controls">
+              <select name="theme">
+                <option value="light">Light Theme</option>
+                <option value="dark">Dark Theme</option>
+                <option value="resume">Resume Theme</option>
+              </select>
+              <button type="submit" class="btn">📄 Convert to PDF</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+     
+      <div class="preview-box-container">
+        <div class="preview-header">
+          <h2> Output</h2>
+          <div class="tabs">
+            <button id="preview-tab" class="tab active">👁 Preview</button>
+            <button id="html-tab" class="tab">&lt;/&gt; HTML</button>
+          </div>
+        </div>
+
+        <div id="preview-view" class="preview-box"></div>
+        <pre id="html-view" class="preview-box" style="display: none;"></pre>
+      </div>
+    </div>
+  </div>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const textarea = document.getElementById("markdown-input");
+    const previewView = document.getElementById("preview-view");
+    const htmlView = document.getElementById("html-view");
+    const previewTab = document.getElementById("preview-tab");
+    const htmlTab = document.getElementById("html-tab");
+    const wordCount = document.getElementById("word-count");
+    const charCount = document.getElementById("char-count");
+    const fileUpload = document.getElementById("file-upload");
+
+    window.addEventListener("load", () => {
+      const saved = localStorage.getItem("markdownDraft");
+      if (saved) {
+        textarea.value = saved;
+        updatePreviewAndCount();
+      }
+    });
+
+    function updatePreviewAndCount() {
+        const rawMarkdown = textarea.value;
+        const htmlOutput = marked.parse(rawMarkdown);
+  const selectedTheme = document.querySelector("select[name='theme']").value;
+
+  // Update content
+  previewView.innerHTML = htmlOutput;
+  htmlView.textContent = htmlOutput;
+
+  // Remove previous theme class
+  previewView.classList.remove("light", "dark", "resume");
+  htmlView.classList.remove("light", "dark", "resume");
+
+  // Add selected theme
+  previewView.classList.add("preview-box", selectedTheme);
+  htmlView.classList.add("preview-box", selectedTheme);
+
+  // Word & char count
+  const words = rawMarkdown.trim().split(/\s+/).filter(word => word.length > 0).length;
+  wordCount.textContent = words;
+  charCount.textContent = rawMarkdown.length;
+
+  localStorage.setItem("markdownDraft", rawMarkdown);
+}
+
+
+    textarea.addEventListener("input", updatePreviewAndCount);
+    document.querySelector("select[name='theme']").addEventListener("change", updatePreviewAndCount);
+
+    
+
+    previewTab.onclick = () => {
+      previewTab.classList.add("active");
+      htmlTab.classList.remove("active");
+      previewView.style.display = "block";
+      htmlView.style.display = "none";
+    };
+
+    htmlTab.onclick = () => {
+      htmlTab.classList.add("active");
+      previewTab.classList.remove("active");
+      previewView.style.display = "none";
+      htmlView.style.display = "block";
+    };
+    fileUpload.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  const errorDisplay = document.getElementById("file-error");
+
+  if (file && !file.name.endsWith(".md")) {
+    errorDisplay.textContent = " Only .md (Markdown) files are supported.";
+    errorDisplay.style.display = "block";
+    fileUpload.value = ""; 
+    return;
+  }
+
+  errorDisplay.style.display = "none"; 
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    textarea.value = e.target.result;
+    updatePreviewAndCount();
+  };
+  reader.readAsText(file);
+});
+
+
+function handleDrop(event) {
+  event.preventDefault();
+  const errorDisplay = document.getElementById("file-error");
+
+  if (event.dataTransfer.files.length > 0) {
+    const file = event.dataTransfer.files[0];
+
+    if (!file.name.endsWith(".md")) {
+      errorDisplay.textContent = "Only .md (Markdown) files are supported.";
+      errorDisplay.style.display = "block";
+      return;
+    }
+
+    errorDisplay.style.display = "none";
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      textarea.value = e.target.result;
+      updatePreviewAndCount();
+    };
+    reader.readAsText(file);
+  }
+}
+
+
+    function handleDragOver(event) {
+      event.preventDefault();
+    }
+  </script>
+</body>
+</html>
