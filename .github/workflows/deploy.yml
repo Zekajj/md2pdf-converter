@@ -12,7 +12,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Cloud SDK
+    - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
@@ -27,10 +27,9 @@ jobs:
       run: |
         gcloud builds submit --tag us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/md2pdf/md2pdf-app .
 
-    - name: Configure kubectl
+    - name: Configure kubectl and deploy
+      env:
+        USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
       run: |
         gcloud container clusters get-credentials md2pdf-cluster --zone us-central1-c
-
-    - name: Deploy to GKE
-      run: |
         kubectl apply -f k8s/
